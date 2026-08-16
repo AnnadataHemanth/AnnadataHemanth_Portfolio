@@ -11,8 +11,17 @@ import errorMiddleware from './middleware/errorMiddleware.js'
 
 const app = express()
 
-// Local development: allow requests from both frontends.
-app.use(cors())
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://annadata-hemanth-portfolio.vercel.app',
+]
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+  }),
+)
 
 app.use(express.json())
 
