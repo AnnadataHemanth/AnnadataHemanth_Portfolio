@@ -1,0 +1,33 @@
+import express from 'express'
+import cors from 'cors'
+
+import messageRoutes from './routes/messageRoutes.js'
+import projectRoutes from './routes/projectRoutes.js'
+import skillRoutes from './routes/skillRoutes.js'
+import authRoutes from './routes/authRoutes.js'
+import statsRoutes from './routes/statsRoutes.js'
+
+import errorMiddleware from './middleware/errorMiddleware.js'
+
+const app = express()
+
+// Local development: allow requests from both frontends.
+app.use(cors())
+
+app.use(express.json())
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Annadata Hemanth Portfolio API is running',
+  })
+})
+
+app.use('/api/messages', messageRoutes)
+app.use('/api/projects', projectRoutes)
+app.use('/api/skills', skillRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/stats', statsRoutes)
+
+app.use(errorMiddleware)
+
+export default app
