@@ -15,6 +15,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'https://annadata-hemanth-portfolio.vercel.app',
+  'https://annadata-hemanth-portfolio-j2kb.vercel.app',
 ]
 
 app.use(
