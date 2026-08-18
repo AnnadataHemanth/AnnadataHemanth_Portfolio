@@ -43,23 +43,25 @@ function ProjectCard({ project, index }) {
   }
 
   const nextImage = () => {
-    if (images.length <= 1) return
+  if (images.length <= 1) return
 
-    setActiveImage(
-      (current) =>
-        (current + 1) % images.length,
-    )
-  }
+  const nextIndex =
+    (activeImage + 1) % images.length
 
-  const previousImage = () => {
-    if (images.length <= 1) return
+  setActiveImage(nextIndex)
+  setSelectedImage(images[nextIndex])
+}
 
-    setActiveImage(
-      (current) =>
-        (current - 1 + images.length) %
-        images.length,
-    )
-  }
+const previousImage = () => {
+  if (images.length <= 1) return
+
+  const previousIndex =
+    (activeImage - 1 + images.length) %
+    images.length
+
+  setActiveImage(previousIndex)
+  setSelectedImage(images[previousIndex])
+}
 
   const openPreview = () => {
     if (images.length === 0) return
