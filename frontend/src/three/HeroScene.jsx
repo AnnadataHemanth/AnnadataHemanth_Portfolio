@@ -7,92 +7,75 @@ function CameraController() {
   const target = useRef({ x: 0, y: 0 })
   const current = useRef({ x: 0, y: 0 })
 
-  const lastDirection = useRef({
-    x: 0,
-    y: 0,
-  })
-
   useEffect(() => {
-    const handleMouseMove = (event) => {
-      const normalizedX =
-        (event.clientX / window.innerWidth - 0.5) * 2
+    const updatePosition = (clientX, clientY) => {
+      target.current.x =
+        ((clientX / window.innerWidth) - 0.5) * 2
 
-      const normalizedY =
-        (event.clientY / window.innerHeight - 0.5) * -2
-
-      const dx = normalizedX - target.current.x
-      const dy = normalizedY - target.current.y
-
-      // Remember the direction the cursor was moving.
-      if (Math.abs(dx) > 0.001) {
-        lastDirection.current.x = Math.sign(dx)
-      }
-
-      if (Math.abs(dy) > 0.001) {
-        lastDirection.current.y = Math.sign(dy)
-      }
-
-      target.current.x = normalizedX
-      target.current.y = normalizedY
+      target.current.y =
+        -((clientY / window.innerHeight) - 0.5) * 2
     }
 
-    window.addEventListener('mousemove', handleMouseMove, {
-      passive: true,
-    })
+    const handleMouseMove = (event) => {
+      updatePosition(event.clientX, event.clientY)
+    }
+
+    const handleTouchMove = (event) => {
+      const touch = event.touches[0]
+
+      if (!touch) return
+
+      updatePosition(
+        touch.clientX,
+        touch.clientY,
+      )
+    }
+
+    window.addEventListener(
+      'mousemove',
+      handleMouseMove,
+      { passive: true },
+    )
+
+    window.addEventListener(
+      'touchmove',
+      handleTouchMove,
+      { passive: true },
+    )
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener(
+        'mousemove',
+        handleMouseMove,
+      )
+
+      window.removeEventListener(
+        'touchmove',
+        handleTouchMove,
+      )
     }
   }, [])
 
-  useFrame(({ camera }) => {
-    /*
-      Cursor direction controls the star direction.
-
-      Cursor → right
-      camera → right
-      visible stars → left
-
-      Cursor → left
-      camera → left
-      visible stars → right
-    */
-
-    const movementSpeedX = 0.030
-    const movementSpeedY = 0.030
-
-    // Keep the camera movement continuous.
-    current.current.x +=
-      lastDirection.current.x * movementSpeedX
-
-    current.current.y +=
-      lastDirection.current.y * movementSpeedY
-
-    // Keep the movement safely bounded.
-    current.current.x = THREE.MathUtils.clamp(
+  useFrame(({ camera, clock }) => {
+    current.current.x = THREE.MathUtils.lerp(
       current.current.x,
-      -0.45,
-      0.45,
+      target.current.x * 0.18,
+      0.07,
     )
 
-    current.current.y = THREE.MathUtils.clamp(
+    current.current.y = THREE.MathUtils.lerp(
       current.current.y,
-      -0.3,
-      0.3,
+      target.current.y * 0.12,
+      0.07,
     )
 
-    // Smoothly follow the camera target.
-    camera.position.x = THREE.MathUtils.lerp(
-      camera.position.x,
-      current.current.x,
-      0.08,
-    )
+    camera.position.x =
+      current.current.x +
+      Math.sin(clock.elapsedTime * 0.15) * 0.015
 
-    camera.position.y = THREE.MathUtils.lerp(
-      camera.position.y,
-      current.current.y,
-      0.08,
-    )
+    camera.position.y =
+      current.current.y +
+      Math.cos(clock.elapsedTime * 0.12) * 0.01
   })
 
   return null
@@ -106,7 +89,6 @@ function StarMotion() {
 
     const time = state.clock.elapsedTime
 
-    // Continuous ambient movement.
     groupRef.current.rotation.y =
       time * 0.006
 
