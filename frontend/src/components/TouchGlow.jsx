@@ -75,12 +75,12 @@ function TouchGlow() {
 
   return (
     <div
-      className="pointer-events-none fixed z-[9999] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 blur-2xl"
-      style={{
-        left: touch.x,
-        top: touch.y,
-      }}
-    />
+  className="pointer-events-none fixed z-[9999] h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500"
+  style={{
+    left: touch.x,
+    top: touch.y,
+  }}
+/>
   )
 }
 
