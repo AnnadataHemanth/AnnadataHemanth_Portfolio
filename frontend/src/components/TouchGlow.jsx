@@ -1,42 +1,33 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 function TouchGlow() {
-  const glowRef = useRef(null)
+  const [touch, setTouch] = useState(null)
 
   useEffect(() => {
-    const glow = glowRef.current
-
-    if (!glow) return
-
-    const moveGlow = (x, y) => {
-      glow.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
-    }
-
     const handleTouchStart = (event) => {
-      const touch = event.touches[0]
+      const currentTouch = event.touches[0]
 
-      if (!touch) return
+      if (!currentTouch) return
 
-      moveGlow(touch.clientX, touch.clientY)
-
-      glow.style.opacity = '1'
-      glow.style.width = '110px'
-      glow.style.height = '110px'
+      setTouch({
+        x: currentTouch.clientX,
+        y: currentTouch.clientY,
+      })
     }
 
     const handleTouchMove = (event) => {
-      const touch = event.touches[0]
+      const currentTouch = event.touches[0]
 
-      if (!touch) return
+      if (!currentTouch) return
 
-      moveGlow(touch.clientX, touch.clientY)
-      glow.style.opacity = '1'
+      setTouch({
+        x: currentTouch.clientX,
+        y: currentTouch.clientY,
+      })
     }
 
     const handleTouchEnd = () => {
-      glow.style.opacity = '0'
-      glow.style.width = '70px'
-      glow.style.height = '70px'
+      setTouch(null)
     }
 
     window.addEventListener('touchstart', handleTouchStart, {
@@ -78,10 +69,17 @@ function TouchGlow() {
     }
   }, [])
 
+  if (!touch) {
+    return null
+  }
+
   return (
     <div
-      ref={glowRef}
-      className="pointer-events-none fixed left-0 top-0 z-[9999] h-[70px] w-[70px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 opacity-0 blur-2xl transition-all duration-200"
+      className="pointer-events-none fixed z-[9999] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 blur-2xl"
+      style={{
+        left: touch.x,
+        top: touch.y,
+      }}
     />
   )
 }
