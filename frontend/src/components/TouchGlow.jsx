@@ -1,78 +1,140 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 function TouchGlow() {
-  const [touch, setTouch] = useState(null)
+  const target = useRef({ x: 0, y: 0 })
+  const current = useRef({ x: 0, y: 0 })
+  const animationFrame = useRef(null)
+
+  const [visible, setVisible] = useState(false)
+  const [position, setPosition] = useState({
+    x: 0,
+    y: 0,
+  })
 
   useEffect(() => {
-    const handleTouchStart = (event) => {
-      const currentTouch = event.touches[0]
+    const animate = () => {
+      current.current.x +=
+        (target.current.x - current.current.x) * 0.22
 
-      if (!currentTouch) return
+      current.current.y +=
+        (target.current.y - current.current.y) * 0.22
 
-      setTouch({
-        x: currentTouch.clientX,
-        y: currentTouch.clientY,
+      setPosition({
+        x: current.current.x,
+        y: current.current.y,
       })
+
+      animationFrame.current =
+        requestAnimationFrame(animate)
     }
 
-    const handleTouchMove = (event) => {
-      const currentTouch = event.touches[0]
-
-      if (!currentTouch) return
-
-      setTouch({
-        x: currentTouch.clientX,
-        y: currentTouch.clientY,
-      })
-    }
-
-    const handleTouchEnd = () => {
-      setTouch(null)
-    }
-
-    window.addEventListener('touchstart', handleTouchStart, {
-      passive: true,
-    })
-
-    window.addEventListener('touchmove', handleTouchMove, {
-      passive: true,
-    })
-
-    window.addEventListener('touchend', handleTouchEnd, {
-      passive: true,
-    })
-
-    window.addEventListener('touchcancel', handleTouchEnd, {
-      passive: true,
-    })
+    animationFrame.current =
+      requestAnimationFrame(animate)
 
     return () => {
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchmove', handleTouchMove)
-      window.removeEventListener('touchend', handleTouchEnd)
-      window.removeEventListener('touchcancel', handleTouchEnd)
+      if (animationFrame.current) {
+        cancelAnimationFrame(
+          animationFrame.current,
+        )
+      }
     }
   }, [])
 
-  if (!touch) return null
+  useEffect(() => {
+    const updateTouch = (event) => {
+      const touch = event.touches[0]
+
+      if (!touch) return
+
+      target.current.x = touch.clientX
+      target.current.y = touch.clientY
+
+      if (!visible) {
+        current.current.x = touch.clientX
+        current.current.y = touch.clientY
+      }
+
+      setVisible(true)
+    }
+
+    const handleTouchStart = (event) => {
+      updateTouch(event)
+    }
+
+    const handleTouchMove = (event) => {
+      updateTouch(event)
+    }
+
+    const handleTouchEnd = () => {
+      setVisible(false)
+    }
+
+    window.addEventListener(
+      'touchstart',
+      handleTouchStart,
+      { passive: true },
+    )
+
+    window.addEventListener(
+      'touchmove',
+      handleTouchMove,
+      { passive: true },
+    )
+
+    window.addEventListener(
+      'touchend',
+      handleTouchEnd,
+      { passive: true },
+    )
+
+    window.addEventListener(
+      'touchcancel',
+      handleTouchEnd,
+      { passive: true },
+    )
+
+    return () => {
+      window.removeEventListener(
+        'touchstart',
+        handleTouchStart,
+      )
+
+      window.removeEventListener(
+        'touchmove',
+        handleTouchMove,
+      )
+
+      window.removeEventListener(
+        'touchend',
+        handleTouchEnd,
+      )
+
+      window.removeEventListener(
+        'touchcancel',
+        handleTouchEnd,
+      )
+    }
+  }, [visible])
 
   return (
     <>
-      {/* Outer soft glow */}
+      {/* Outer glow */}
       <div
-        className="pointer-events-none fixed z-[99999] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15 blur-3xl"
+        className="pointer-events-none fixed z-[99999] h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 blur-3xl transition-opacity duration-300"
         style={{
-          left: `${touch.x}px`,
-          top: `${touch.y}px`,
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          opacity: visible ? 1 : 0,
         }}
       />
 
       {/* Inner glow */}
       <div
-        className="pointer-events-none fixed z-[100000] h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/25 blur-xl"
+        className="pointer-events-none fixed z-[100000] h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/35 blur-xl transition-opacity duration-200"
         style={{
-          left: `${touch.x}px`,
-          top: `${touch.y}px`,
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          opacity: visible ? 1 : 0,
         }}
       />
     </>
