@@ -47,40 +47,35 @@ function TouchGlow() {
     })
 
     return () => {
-      window.removeEventListener(
-        'touchstart',
-        handleTouchStart,
-      )
-
-      window.removeEventListener(
-        'touchmove',
-        handleTouchMove,
-      )
-
-      window.removeEventListener(
-        'touchend',
-        handleTouchEnd,
-      )
-
-      window.removeEventListener(
-        'touchcancel',
-        handleTouchEnd,
-      )
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchmove', handleTouchMove)
+      window.removeEventListener('touchend', handleTouchEnd)
+      window.removeEventListener('touchcancel', handleTouchEnd)
     }
   }, [])
 
-  if (!touch) {
-    return null
-  }
+  if (!touch) return null
 
   return (
-    <div
-      className="pointer-events-none fixed z-[99999] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 blur-2xl"
-      style={{
-        left: `${touch.x}px`,
-        top: `${touch.y}px`,
-      }}
-    />
+    <>
+      {/* Outer soft glow */}
+      <div
+        className="pointer-events-none fixed z-[99999] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15 blur-3xl"
+        style={{
+          left: `${touch.x}px`,
+          top: `${touch.y}px`,
+        }}
+      />
+
+      {/* Inner glow */}
+      <div
+        className="pointer-events-none fixed z-[100000] h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/25 blur-xl"
+        style={{
+          left: `${touch.x}px`,
+          top: `${touch.y}px`,
+        }}
+      />
+    </>
   )
 }
 
