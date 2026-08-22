@@ -6,6 +6,7 @@ import AdminHeader from './components/AdminHeader'
 import Projects from './pages/Projects'
 import Skills from './pages/Skills'
 import Messages from './pages/Messages'
+import Certificates from './pages/Certificates'
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard')
@@ -22,15 +23,18 @@ function App() {
   }
 
   const renderPage = () => {
-  switch (activePage) {
-    case 'projects':
-      return <Projects />
+    switch (activePage) {
+      case 'projects':
+        return <Projects />
 
       case 'skills':
         return <Skills />
 
       case 'messages':
         return <Messages />
+
+      case 'certificates':
+        return <Certificates />
 
       default:
         return <Dashboard />
@@ -42,6 +46,7 @@ function App() {
     projects: 'Projects',
     skills: 'Skills',
     messages: 'Messages',
+    certificates: 'Certificates',
   }
 
   return (

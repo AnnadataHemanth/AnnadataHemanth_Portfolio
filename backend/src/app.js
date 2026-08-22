@@ -6,6 +6,7 @@ import projectRoutes from './routes/projectRoutes.js'
 import skillRoutes from './routes/skillRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import statsRoutes from './routes/statsRoutes.js'
+import certificateRoutes from './routes/certificateRoutes.js'
 
 import errorMiddleware from './middleware/errorMiddleware.js'
 
@@ -34,6 +35,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/messages', messageRoutes)
 app.use('/api/projects', projectRoutes)
+app.use('/api/certificates', certificateRoutes)
 app.use('/api/skills', skillRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/stats', statsRoutes)
