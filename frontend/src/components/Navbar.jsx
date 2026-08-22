@@ -32,6 +32,13 @@ function Navbar() {
           </a>
 
           <a
+            href="#certificates"
+            className="transition-colors hover:text-white"
+          >
+            Certificates
+          </a>
+
+          <a
             href="#experience"
             className="transition-colors hover:text-white"
           >
@@ -44,6 +51,7 @@ function Navbar() {
           >
             Education
           </a>
+
           <a
             href="#contact"
             className="transition-colors hover:text-white"
