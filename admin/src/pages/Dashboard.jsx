@@ -7,6 +7,7 @@ function Dashboard() {
     projects: 0,
     skills: 0,
     messages: 0,
+    certificates: 0,
   })
 
   const [loading, setLoading] = useState(true)
@@ -55,6 +56,10 @@ function Dashboard() {
       value: stats.skills,
     },
     {
+      label: 'Certificates',
+      value: stats.certificates,
+    },
+    {
       label: 'Messages',
       value: stats.messages,
     },
@@ -89,7 +94,7 @@ function Dashboard() {
         </p>
       )}
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statCards.map((stat) => (
           <div
             key={stat.label}
