@@ -9,6 +9,10 @@ function Sidebar({ activePage, setActivePage, onLogout }) {
       label: 'Projects',
     },
     {
+      id: 'certificates',
+      label: 'Certificates',
+    },
+    {
       id: 'skills',
       label: 'Skills',
     },
