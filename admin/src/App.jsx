@@ -7,6 +7,7 @@ import Projects from './pages/Projects'
 import Skills from './pages/Skills'
 import Messages from './pages/Messages'
 import Certificates from './pages/Certificates'
+import Experiences from './pages/Experiences'
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard')
@@ -36,6 +37,9 @@ function App() {
       case 'certificates':
         return <Certificates />
 
+      case 'experiences':
+        return <Experiences />
+
       default:
         return <Dashboard />
     }
@@ -47,6 +51,7 @@ function App() {
     skills: 'Skills',
     messages: 'Messages',
     certificates: 'Certificates',
+    experiences: 'Experiences',
   }
 
   return (

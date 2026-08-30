@@ -17,6 +17,10 @@ function Sidebar({ activePage, setActivePage, onLogout }) {
       label: 'Skills',
     },
     {
+    id: 'experiences',
+    label: 'Experiences',
+    },
+    {
       id: 'messages',
       label: 'Messages',
     },
