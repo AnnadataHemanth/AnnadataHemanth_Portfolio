@@ -7,6 +7,7 @@ import skillRoutes from './routes/skillRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import statsRoutes from './routes/statsRoutes.js'
 import certificateRoutes from './routes/certificateRoutes.js'
+import experienceRoutes from './routes/experienceRoutes.js'
 
 import errorMiddleware from './middleware/errorMiddleware.js'
 
@@ -39,6 +40,7 @@ app.use('/api/certificates', certificateRoutes)
 app.use('/api/skills', skillRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/stats', statsRoutes)
+app.use('/api/experiences',experienceRoutes,)
 
 app.use(errorMiddleware)
 
