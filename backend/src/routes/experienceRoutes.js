@@ -12,13 +12,11 @@ import authMiddleware from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
+// Public
 router.get('/', getExperiences)
 
-router.post(
-  '/',
-  authMiddleware,
-  createExperience,
-)
+// Admin protected
+router.post('/', authMiddleware, createExperience)
 
 router.post(
   '/reorder',

@@ -1,10 +1,6 @@
 import Experience from '../models/Experience.js'
 
-export const getExperiences = async (
-  req,
-  res,
-  next,
-) => {
+export const getExperiences = async (req, res, next) => {
   try {
     const experiences = await Experience.find().sort({
       order: 1,
@@ -17,23 +13,30 @@ export const getExperiences = async (
   }
 }
 
-export const createExperience = async (
-  req,
-  res,
-  next,
-) => {
+export const createExperience = async (req, res, next) => {
   try {
-    const lastExperience =
-      await Experience.findOne().sort({
-        order: -1,
+    const { year, role, company, description } = req.body
+
+    if (!year || !role || !company || !description) {
+      return res.status(400).json({
+        message:
+          'Year, role, company and description are required.',
       })
+    }
+
+    const lastExperience = await Experience.findOne().sort({
+      order: -1,
+    })
 
     const nextOrder = lastExperience
       ? lastExperience.order + 1
       : 0
 
     const experience = await Experience.create({
-      ...req.body,
+      year,
+      role,
+      company,
+      description,
       order: nextOrder,
     })
 
@@ -43,21 +46,23 @@ export const createExperience = async (
   }
 }
 
-export const updateExperience = async (
-  req,
-  res,
-  next,
-) => {
+export const updateExperience = async (req, res, next) => {
   try {
-    const experience =
-      await Experience.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {
-          new: true,
-          runValidators: true,
-        },
-      )
+    const { year, role, company, description } = req.body
+
+    const experience = await Experience.findByIdAndUpdate(
+      req.params.id,
+      {
+        year,
+        role,
+        company,
+        description,
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
 
     if (!experience) {
       return res.status(404).json({
@@ -71,16 +76,11 @@ export const updateExperience = async (
   }
 }
 
-export const deleteExperience = async (
-  req,
-  res,
-  next,
-) => {
+export const deleteExperience = async (req, res, next) => {
   try {
-    const experience =
-      await Experience.findByIdAndDelete(
-        req.params.id,
-      )
+    const experience = await Experience.findByIdAndDelete(
+      req.params.id,
+    )
 
     if (!experience) {
       return res.status(404).json({
@@ -110,26 +110,25 @@ export const reorderExperiences = async (
       })
     }
 
-    const operations = orderedIds.map(
-      (id, index) => ({
-        updateOne: {
-          filter: { _id: id },
-          update: {
-            $set: { order: index },
+    const operations = orderedIds.map((id, index) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: {
+          $set: {
+            order: index,
           },
         },
-      }),
-    )
+      },
+    }))
 
     if (operations.length > 0) {
       await Experience.bulkWrite(operations)
     }
 
-    const experiences =
-      await Experience.find().sort({
-        order: 1,
-        createdAt: 1,
-      })
+    const experiences = await Experience.find().sort({
+      order: 1,
+      createdAt: 1,
+    })
 
     res.status(200).json(experiences)
   } catch (error) {

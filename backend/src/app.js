@@ -40,7 +40,7 @@ app.use('/api/certificates', certificateRoutes)
 app.use('/api/skills', skillRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/stats', statsRoutes)
-app.use('/api/experiences',experienceRoutes,)
+app.use('/api/experiences', experienceRoutes)
 
 app.use(errorMiddleware)
 
